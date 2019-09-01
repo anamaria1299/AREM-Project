@@ -8,9 +8,6 @@ public class Controller {
 
         HttpServer httpServer = new HttpServer();
         httpServer.initialize();
-        httpServer.listen("apps/hello");
-        httpServer.listen("apps/bye");
-        httpServer.listen("apps/holi");
-        httpServer.listen("apps/chao");
+        httpServer.listen();
     }
 }

@@ -2,6 +2,7 @@ package edu.escuelaing.arem;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 
 public class HandlerImpl implements Handler{
 
@@ -13,8 +14,10 @@ public class HandlerImpl implements Handler{
         this.requestClass = requestClass;
     }
 
-    public void process() throws IllegalAccessException, InstantiationException, InvocationTargetException {
+    public String process(HashMap<String, String> queries) throws IllegalAccessException, InstantiationException, InvocationTargetException {
 
-        System.out.println(method.invoke(requestClass.newInstance()));
+        if(!queries.isEmpty()) return (String) method.invoke(requestClass.newInstance(), queries);
+        return (String) method.invoke(requestClass.newInstance());
+
     }
 }
