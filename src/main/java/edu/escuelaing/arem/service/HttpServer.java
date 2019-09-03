@@ -3,6 +3,8 @@ package edu.escuelaing.arem.service;
 import edu.escuelaing.arem.HandlerImpl;
 import org.reflections.Reflections;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -107,6 +109,22 @@ public class HttpServer {
             } catch (Exception e) {
                 System.err.println(e.getMessage());
             }
+        } else {
+            getImage(outputStream, method);
+        }
+    }
+
+    private void getImage(OutputStream outputStream, String resource) {
+
+        PrintWriter response = new PrintWriter(outputStream, true);
+        BufferedImage image= null;
+        try {
+            image = ImageIO.read(new File(System.getProperty("user.dir"),"src/main/resources/Images"+resource));
+            response.println("HTTP/1.1 200 OK");
+            response.println("Content-Type: image/png\r\n");
+            ImageIO.write(image, "png", outputStream);
+        } catch (IOException e) {
+            HTMLNotFound(response);
         }
     }
 
