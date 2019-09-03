@@ -50,7 +50,7 @@ public class HttpServer {
     public void listen() {
 
         try {
-            serverSocket = new ServerSocket(8080);
+            serverSocket = new ServerSocket(getPort());
             while(next) {
                 System.out.println("Ready to receive ...");
                 clientSocket = serverSocket.accept();
@@ -62,6 +62,13 @@ public class HttpServer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private int getPort() {
+        if (System.getenv("PORT") != null) {
+            return Integer.parseInt(System.getenv("PORT"));
+        }
+        return 8080;
     }
 
     private static String  getPath(InputStream inputStream) throws IOException {
