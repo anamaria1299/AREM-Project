@@ -50,8 +50,8 @@ public class HttpServer {
     public void listen() {
 
         try {
-            serverSocket = new ServerSocket(getPort());
             while(next) {
+                serverSocket = new ServerSocket(getPort());
                 System.out.println("Ready to receive ...");
                 clientSocket = serverSocket.accept();
                 String path = getPath(clientSocket.getInputStream());
@@ -59,7 +59,7 @@ public class HttpServer {
                 HashMap<String, String> queries = handleUrl(url);
                 resolvingRequest(url.getPath(), queries, clientSocket.getOutputStream());
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

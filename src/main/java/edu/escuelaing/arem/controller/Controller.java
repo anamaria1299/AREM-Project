@@ -6,8 +6,12 @@ public class Controller {
 
     public static void main(String[] args) {
 
-        HttpServer httpServer = new HttpServer();
-        httpServer.initialize();
-        httpServer.listen();
+        try {
+            HttpServer httpServer = new HttpServer();
+            httpServer.initialize();
+            httpServer.listen();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
