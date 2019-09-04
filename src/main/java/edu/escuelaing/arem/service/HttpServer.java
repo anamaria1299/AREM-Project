@@ -132,11 +132,25 @@ public class HttpServer {
         BufferedImage image= null;
         try {
             image = ImageIO.read(new File(System.getProperty("user.dir"),"src/main/resources/Images"+resource));
-            response.println("HTTP/1.1 200 OK\r\n"+"Content-Type: image/png\r\n");
-            ImageIO.write(image, "png", outputStream);
+            DataOutputStream dataOutputStream = getImageLikeBytes(outputStream, image);
+            response.println(dataOutputStream.toString());
         } catch (IOException e) {
             HTMLNotFound(response);
         }
+    }
+
+    private DataOutputStream getImageLikeBytes(OutputStream outputStream, BufferedImage image) throws IOException {
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ImageIO.write(image, "png", byteArrayOutputStream);
+        byte[] imageByte = byteArrayOutputStream.toByteArray();
+        DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+        dataOutputStream.writeBytes("HTTP/1.1 200 OK\r\n"+"Content-Type: image/png\r\n");
+        dataOutputStream.writeBytes("Content-Length: "+ imageByte.length);
+        dataOutputStream.writeBytes("\r\n\r\n");
+        dataOutputStream.write(imageByte);
+        dataOutputStream.close();
+        return dataOutputStream;
     }
 
     private void handleHTMLPages(String method, OutputStream outputStream, HashMap<String, String> queries) throws Exception {
