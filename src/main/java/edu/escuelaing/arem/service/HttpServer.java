@@ -82,7 +82,7 @@ public class HttpServer {
         return 8080;
     }
 
-    private static String  getPath(InputStream inputStream) throws IOException {
+    private String  getPath(InputStream inputStream) throws IOException {
 
         inputStream.mark(0);
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
@@ -96,6 +96,7 @@ public class HttpServer {
                 return get[1];
             }
         }
+        HTMLNotFound(new PrintWriter(clientSocket.getOutputStream(), true));
         throw new IOException("Impossible to get url path");
     }
 
@@ -118,14 +119,8 @@ public class HttpServer {
         if(method.contains("/apps/")) {
             try {
                 handleHTMLPages(method, outputStream, queries);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
             } catch (Exception e) {
-                System.err.println(e.getMessage());
+                HTMLNotFound(new PrintWriter(outputStream, true));
             }
         } else {
             getImage(outputStream, method);
