@@ -6,7 +6,6 @@ import org.reflections.Reflections;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.ServerSocket;
@@ -149,22 +148,22 @@ public class HttpServer {
         }
         String htmlResponse = handlerHashMap.get(realMethod).process(queries);
         PrintWriter response = new PrintWriter(outputStream, true);
-        headerHTMLAccepted(response);
+        headerHTMLHeader(response);
         response.println(htmlResponse);
         response.flush();
         response.close();
     }
 
-    private void headerHTMLAccepted(PrintWriter response) {
+    private void headerHTMLHeader(PrintWriter response) {
 
         response.println("HTTP/1.1 200 OK\r\n");
         response.println("Content-Type: text/html\r\n");
+        response.println("\r\n");
     }
 
     private void HTMLNotFound(PrintWriter response) {
 
-        response.println("HTTP/1.1 200 OK\r\n");
-        response.println("Content-Type: text/html\r\n");
+        headerHTMLHeader(response);
         writeHTML("src/main/resources/Pages/notFound.html", response);
         response.flush();
         response.close();
