@@ -18,7 +18,6 @@ import java.util.Set;
 public class HttpServer {
 
     private static ServerSocket serverSocket = null;
-    private static boolean next = true;
     private static Socket clientSocket = null;
     private HashMap<String, HandlerImpl> handlerHashMap = new HashMap<String, HandlerImpl>();
 
@@ -49,19 +48,31 @@ public class HttpServer {
 
     public void listen() {
 
-        try {
-            while(next) {
+        while(true) {
+            try {
                 serverSocket = new ServerSocket(getPort());
-                System.out.println("Ready to receive ...");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Ready to receive ...");
+            try {
                 clientSocket = serverSocket.accept();
-                String path = getPath(clientSocket.getInputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String path = null;
+            try {
+                path = getPath(clientSocket.getInputStream());
                 URL url = new URL("http://host" + path);
                 HashMap<String, String> queries = handleUrl(url);
                 resolvingRequest(url.getPath(), queries, clientSocket.getOutputStream());
+                clientSocket.close();
+                serverSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
     }
 
     private int getPort() {
