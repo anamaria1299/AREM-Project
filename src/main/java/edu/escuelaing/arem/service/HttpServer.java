@@ -97,7 +97,7 @@ public class HttpServer {
             }
         }
         HTMLNotFound(new PrintWriter(clientSocket.getOutputStream(), true));
-        throw new IOException("Impossible to get url path");
+        return "";
     }
 
     private HashMap<String, String> handleUrl(URL url) throws MalformedURLException {
@@ -163,7 +163,7 @@ public class HttpServer {
 
     private void HTMLNotFound(PrintWriter response) {
 
-        response.println("HTTP/1.1 404 Not Found");
+        response.println("HTTP/1.1 200 OK");
         response.println("Content-Type: text/html\r\n");
         writeHTML("src/main/resources/Pages/notFound.html", response);
         response.flush();
