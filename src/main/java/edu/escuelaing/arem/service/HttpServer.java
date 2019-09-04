@@ -132,8 +132,7 @@ public class HttpServer {
         BufferedImage image= null;
         try {
             image = ImageIO.read(new File(System.getProperty("user.dir"),"src/main/resources/Images"+resource));
-            response.println("HTTP/1.1 200 OK\r\n");
-            response.println("Content-Type: image/png\r\n");
+            response.println("HTTP/1.1 200 OK\r\n"+"Content-Type: image/png\r\n");
             ImageIO.write(image, "png", outputStream);
         } catch (IOException e) {
             HTMLNotFound(response);
@@ -156,9 +155,7 @@ public class HttpServer {
 
     private void headerHTMLHeader(PrintWriter response) {
 
-        response.println("HTTP/1.1 200 OK\r\n");
-        response.println("Content-Type: text/html\r\n");
-        response.println("\r\n");
+        response.println("HTTP/1.1 200 OK\r\n"+"Content-Type: text/html\r\n"+"\r\n");
     }
 
     private void HTMLNotFound(PrintWriter response) {
