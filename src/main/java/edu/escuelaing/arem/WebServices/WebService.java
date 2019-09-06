@@ -71,4 +71,14 @@ public class WebService {
         return "bye";
     }
 
+    /**
+     * Say hello with a name
+     * @return
+     */
+    @Web("sayHello")
+    public static String sayHello() throws IOException {
+
+        return getStringBuilderResult("src/main/resources/Pages/sayHello.html");
+    }
+
 }
