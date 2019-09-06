@@ -14,12 +14,19 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Set;
 
+/**
+ * @Author Ana Rincon
+ * This is a HTTP Server class
+ */
 public class HttpServer {
 
     private static ServerSocket serverSocket = null;
     private static Socket clientSocket = null;
     private HashMap<String, HandlerImpl> handlerHashMap = new HashMap<String, HandlerImpl>();
 
+    /**
+     * Initialize the server with all the methods that the webServices contains with annotation @WEB
+     */
     public void initialize() {
 
         Reflections reflections = new Reflections("edu.escuelaing.arem.WebServices");
@@ -30,6 +37,10 @@ public class HttpServer {
         }
     }
 
+    /**
+     * Add method from specific class into the handlerHashMap
+     * @param className The classname require to get the methods
+     */
     private void addWebMethods(String className) {
 
         try {
@@ -45,6 +56,9 @@ public class HttpServer {
         }
     }
 
+    /**
+     * Start listening the HTTP Server
+     */
     public void listen() {
 
         while(true) {
@@ -74,6 +88,11 @@ public class HttpServer {
 
     }
 
+    /**
+     * Get a port where the application will be listening
+     * the default port is 8080 but this can be also getting from an environment variable
+     * @return The port
+     */
     private int getPort() {
         if (System.getenv("PORT") != null) {
             return Integer.parseInt(System.getenv("PORT"));
@@ -81,6 +100,13 @@ public class HttpServer {
         return 8080;
     }
 
+    /**
+     * Get the path of a given request
+     * @param inputStream Input require to parse the path
+     * @return The current path
+     * @throws IOException If an exception happens it is necessary to know it and throws it to another method that will
+     * support it
+     */
     private String  getPath(InputStream inputStream) throws IOException {
 
         inputStream.mark(0);
@@ -99,6 +125,12 @@ public class HttpServer {
         return "";
     }
 
+    /**
+     * Handle the url to know if this one has any query
+     * @param url The requires url to handle the request
+     * @return The queries that the current request has
+     * @throws MalformedURLException Throws an exception if is a malformed exception
+     */
     private HashMap<String, String> handleUrl(URL url) throws MalformedURLException {
 
         HashMap<String, String> queries = new HashMap<>();
@@ -113,6 +145,12 @@ public class HttpServer {
         return queries;
     }
 
+    /**
+     * Method to resolve the request and know if it is an html page or other kind of resource
+     * @param method The method that is being requested
+     * @param queries The queries that the request can have
+     * @param outputStream Necessary to write the response
+     */
     private void resolvingRequest(String method, HashMap<String,String> queries, OutputStream outputStream) {
 
         if(method.contains("/apps/")) {
@@ -126,6 +164,11 @@ public class HttpServer {
         }
     }
 
+    /**
+     * Get the image resource given the name of the resource and the outputStream
+     * @param outputStream Given to write the response
+     * @param resource Given to know the resource name
+     */
     private void getImage(OutputStream outputStream, String resource) {
 
         PrintWriter response = new PrintWriter(outputStream, true);
@@ -139,6 +182,13 @@ public class HttpServer {
         }
     }
 
+    /**
+     * Get the image like bytes to write the response
+     * @param outputStream Given to write the response
+     * @param image The image that is being requested
+     * @return The data output stream
+     * @throws IOException throws it if some exception occurred
+     */
     private DataOutputStream getImageLikeBytes(OutputStream outputStream, BufferedImage image) throws IOException {
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -153,6 +203,13 @@ public class HttpServer {
         return dataOutputStream;
     }
 
+    /**
+     * Handle the HTML pages calling to the handler class
+     * @param method The given method needed to know what the client is looking for
+     * @param outputStream Given to write the response
+     * @param queries Given if the request has any query
+     * @throws Exception
+     */
     private void handleHTMLPages(String method, OutputStream outputStream, HashMap<String, String> queries) throws Exception {
 
         String realMethod = method.substring(6, method.length());
@@ -167,11 +224,19 @@ public class HttpServer {
         response.close();
     }
 
+    /**
+     * Build the header to an HTML page
+     * @param response when it is going to write the header
+     */
     private void headerHTMLHeader(PrintWriter response) {
 
         response.println("HTTP/1.1 200 OK\r\n"+"Content-Type: text/html\r\n"+"\r\n");
     }
 
+    /**
+     * Build an HTML page when the request is not found
+     * @param response when it is going to write the header
+     */
     private void HTMLNotFound(PrintWriter response) {
 
         headerHTMLHeader(response);
@@ -180,6 +245,11 @@ public class HttpServer {
         response.close();
     }
 
+    /**
+     * Write the HTML file into the response
+     * @param pathFile The path of the HTML requested
+     * @param response when it is going to write the header
+     */
     private void writeHTML(String pathFile, PrintWriter response) {
 
         try {
