@@ -30,6 +30,8 @@ The deploy of this application was in [Heroku](https://www.heroku.com/), you can
 
 #### HTML [Hello](https://http-server-ana.herokuapp.com/apps/hello) - [Hello with name](https://http-server-ana.herokuapp.com/apps/helloName?name=Ana)
 
+#### Application [Say hello](https://http-server-ana.herokuapp.com/apps/sayHello)
+
 you could change the name to yours making url?name={your_name}. Also is important to know that if you are looking something that does not exist the server will sed an [error page](https://http-server-ana.herokuapp.com/hi).
 
 # Build with
