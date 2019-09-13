@@ -13,6 +13,9 @@ import java.net.Socket;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * @Author Ana Rincon
@@ -23,6 +26,8 @@ public class HttpServer {
     private static ServerSocket serverSocket = null;
     private static Socket clientSocket = null;
     private HashMap<String, HandlerImpl> handlerHashMap = new HashMap<String, HandlerImpl>();
+
+    private ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(5);
 
     /**
      * Initialize the server with all the methods that the webServices contains with annotation @WEB
@@ -61,31 +66,36 @@ public class HttpServer {
      */
     public void listen() {
 
+        try {
+            serverSocket = new ServerSocket(getPort());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         while(true) {
-            try {
-                serverSocket = new ServerSocket(getPort());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
             System.out.println("Ready to receive ...");
-            try {
-                clientSocket = serverSocket.accept();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            String path = null;
-            try {
-                path = getPath(clientSocket.getInputStream());
-                URL url = new URL("http://host" + path);
-                HashMap<String, String> queries = handleUrl(url);
-                resolvingRequest(url.getPath(), queries, clientSocket.getOutputStream());
-                clientSocket.close();
-                serverSocket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            executor.submit(() -> processingRequests());
         }
 
+    }
+
+    private void processingRequests() {
+
+        try {
+            clientSocket = serverSocket.accept();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String path = null;
+        try {
+            path = getPath(clientSocket.getInputStream());
+            URL url = new URL("http://host" + path);
+            HashMap<String, String> queries = handleUrl(url);
+            resolvingRequest(url.getPath(), queries, clientSocket.getOutputStream());
+            clientSocket.close();
+            serverSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
