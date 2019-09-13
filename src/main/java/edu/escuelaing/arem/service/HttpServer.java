@@ -73,18 +73,19 @@ public class HttpServer {
         }
         while(true) {
             System.out.println("Ready to receive ...");
-            executor.submit(() -> processingRequests());
+            executor.submit(() -> {
+                try {
+                    processingRequests(serverSocket.accept());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
         }
 
     }
 
-    private void processingRequests() {
+    private void processingRequests(Socket clientSocket) {
 
-        try {
-            clientSocket = serverSocket.accept();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         String path = null;
         try {
             path = getPath(clientSocket.getInputStream());
@@ -92,7 +93,6 @@ public class HttpServer {
             HashMap<String, String> queries = handleUrl(url);
             resolvingRequest(url.getPath(), queries, clientSocket.getOutputStream());
             clientSocket.close();
-            serverSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
