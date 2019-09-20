@@ -71,8 +71,8 @@ public class HttpServer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        System.out.println("Ready to receive ...");
         while(true) {
-            System.out.println("Ready to receive ...");
             executor.submit(() -> {
                 try {
                     processingRequests(serverSocket.accept());
