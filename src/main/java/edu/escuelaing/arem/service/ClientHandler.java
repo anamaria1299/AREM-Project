@@ -29,6 +29,7 @@ public class ClientHandler implements Runnable {
             URL url = new URL("http://host" + path);
             HashMap<String, String> queries = handleUrl(url);
             resolvingRequest(url.getPath(), queries, clientSocket.getOutputStream());
+            clientSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
