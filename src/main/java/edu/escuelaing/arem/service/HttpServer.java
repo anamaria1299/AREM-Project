@@ -27,7 +27,7 @@ public class HttpServer {
     private static Socket clientSocket = null;
     private HashMap<String, HandlerImpl> handlerHashMap = new HashMap<String, HandlerImpl>();
 
-    private ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(20);
+    private ThreadPoolExecutor executor = (ThreadPoolExecutor) Executors.newFixedThreadPool(50);
 
     /**
      * Initialize the server with all the methods that the webServices contains with annotation @WEB
