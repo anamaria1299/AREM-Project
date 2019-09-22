@@ -1,3 +1,15 @@
+# Concurring server and client (heroku/aws)
+
+In this laboratory I made a concurring server with the use of a ThreadPoolExecutor, also I made a client into AWS. To test the performance of this program and the difference using threads I realized an experiment changing the amount of those threads.
+
+Now, this is a little sample of the experiment, there are just 18 of 200
+
+![](https://github.com/anamaria1299/AREM-Project/blob/master/resources/sample.png)
+
+and this is the resulting graphic, in the axis x are the number in ms than has each request and in the other axis are the number of requests
+
+![](https://github.com/anamaria1299/AREM-Project/blob/master/resources/test.png)
+
 # HTTP Server Project
 
 In this project was implemented an HTTP Server that can resolve requests of HTML pages and resources like image PNG, also this handle POJO (Plain Java Object) through an implemented framework that works with @WEB annotation that handle the methods that the user want to show into a web interface. Besides, It can receive multiple no concurrent requests. 
